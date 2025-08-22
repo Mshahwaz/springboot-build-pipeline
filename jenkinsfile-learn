@@ -66,7 +66,7 @@ pipeline{
     stage(' Stage VII: Scan Image'){
         steps{
             echo "Scanning Image for Vulnerabilities"
-            sh "trivy image --scanner vuln --offline-scan shahwaz131/springboot:latest > trivyresults.txt"
+            sh "trivy image --scanners vuln --offline-scan shahwaz131/springboot:latest > trivyresults.txt"
         }
     }
 }

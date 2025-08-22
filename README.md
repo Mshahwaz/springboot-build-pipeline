@@ -48,6 +48,8 @@ $sudo ./sonarqube-server-setup.sh
 - [ ] Add dockerhub credentials as username/password type / or PAT token
 - [ ] Add Gitlab/Github credentials 
 - [ ] Add Build server credentials for Jenkins master to connect
+- [ ] Generate NVD_API_KEY from visting this link: https://nvd.nist.gov/developers/request-an-api-key  
+- [ ] Add NVD_API_KEY in jenkins credentails as secret.txt with ID: NVD_API_KEY
 
 ## Step 6: Enable Sonarqube webhook for Quality Gates & Install dependency-check plugin
 - [ ] Generate webhook & add the Jenkins URL as follows - http://URL:8080/sonarqube-webhook/

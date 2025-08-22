@@ -1,5 +1,9 @@
 pipeline{
     agent{ label 'build' }
+    environment{
+        registry = "shahwaz131/springboot"
+        registryCredential = 'dockerhub'
+    }
     stages{
         stage('Code Checkout'){
             steps{
@@ -47,6 +51,17 @@ pipeline{
            }
         }
       }
+    }
+    stage(' Stage VI: Build Artifact '){
+        steps{
+            echo "Building Docker image and Pushing it to Dockerhub"
+            script{
+                docker.withRegistry('', registryCredential){
+                    myImage = docker.build registry
+                    myImage.push()
+                }
+            }
+        }
     }
 }
 }

@@ -6,5 +6,23 @@ pipeline{
                 git branch: 'main', credentialsId: 'GithubCred', url: 'https://github.com/Mshahwaz/springboot-build-pipeline.git'
             }
         }
+        stage('Stage I: Build'){
+            steps{
+                echo "Building Jar Component ..."
+                sh "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64; mvn clean package "
+            }
+        }
+        stage('Stage II: Code Coverage ') {
+            steps {
+	            echo "Running Code Coverage ..."
+                sh "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64; mvn jacoco:report"
+      }
+    }
+        stage('Stage III: SCA') {
+            steps { 
+                echo "Running Software Composition Analysis using OWASP Dependency-Check ..."
+                sh "export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64; mvn org.owasp:dependency-check-maven:check"
+      }
+    }
     }
 }

@@ -1,0 +1,10 @@
+pipeline{
+    agent{ label '' }
+    stages{
+        stage('Code Checkout'){
+            steps{
+                git branch: 'main', credentialsId: 'GithubCred', url: 'https://github.com/Mshahwaz/springboot-build-pipeline.git'
+            }
+        }
+    }
+}

@@ -25,17 +25,17 @@ pipeline{
         stage('Stage III: SCA') {
             steps { 
                 echo "Running Software Composition Analysis using OWASP Dependency-Check ..."
-                 withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
-                sh "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64; mvn org.owasp:dependency-check-maven:check"
+                withCredentials([string(credentialsId: 'NVD_API_KEY', variable: 'NVD_API_KEY')]) {
+                    sh "export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64; mvn org.owasp:dependency-check-maven:check"
             
             }
       }
     }
         stage('Stage IV: SAST'){
             steps{
-            echo "Running Static application security testing using SonarQube Scanner ..."
-            withSonarQubeEnv('sonarscanner') {
-                sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectName=wezvatech'
+                echo "Running Static application security testing using SonarQube Scanner ..."
+                withSonarQubeEnv('sonarscanner') {
+                    sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectName=wezvatech'
             }
        }
     }
@@ -67,6 +67,14 @@ pipeline{
         steps{
             echo "Scanning Image for Vulnerabilities"
             sh "trivy image --scanners vuln --offline-scan shahwaz131/springboot:latest > trivyresults.txt"
+        }
+    }
+    stage(' Stage VIII: Smoke Test '){
+        steps{
+            echo "Smoke Test the Image"
+            sh "docker run -d --name smokerun -p 8080:8080 shahwaz131/springboot"
+            sh "sleep 90; ./check.sh"
+            sh "docker rm --force smokerun"
         }
     }
 }
